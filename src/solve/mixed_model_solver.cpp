@@ -20,7 +20,10 @@ static Eigen::MatrixXd kron(const Eigen::MatrixXd& A, const Eigen::MatrixXd& B) 
     return C;
 }
 
+#if defined(__linux__) && (defined(__GNUC__) || defined(__clang__))
+#define COSMICBLUP_HAS_WEAK_OPENBLAS 1
 extern "C" void openblas_set_num_threads(int num_threads) __attribute__((weak));
+#endif
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -367,7 +370,9 @@ SolveResult GSSolve::solve(const Context& ctx) {
                 old_threads = omp_get_max_threads();
                 omp_set_num_threads(1);
 #endif
+#ifdef COSMICBLUP_HAS_WEAK_OPENBLAS
                 if (openblas_set_num_threads) openblas_set_num_threads(1);
+#endif
 
                 result.Cinv_beta.resize(p, p);
                 result.beta_se.resize(p);
@@ -401,7 +406,9 @@ SolveResult GSSolve::solve(const Context& ctx) {
 #ifdef _OPENMP
                 omp_set_num_threads(old_threads);
 #endif
+#ifdef COSMICBLUP_HAS_WEAK_OPENBLAS
                 if (openblas_set_num_threads) openblas_set_num_threads(old_threads);
+#endif
 
                 result.se_calculated = true;
                 result.cov_calculated = true;

@@ -21,10 +21,6 @@
 #include <fstream>
 #include <filesystem>
 
-#if defined(__GNUC__) || defined(__clang__)
-extern "C" void openblas_set_num_threads(int num_threads) __attribute__((weak));
-#endif
-
 #ifdef _OPENMP
 #include <omp.h>
 #endif
