@@ -1,0 +1,11 @@
+id sire dam
+id1 0 0
+id2 0 0
+id3 0 0
+id4 0 0
+id5 id1 id2
+id6 id1 id2
+id7 id3 id4
+id8 id3 id4
+id9 id5 id7
+id10 id6 id8

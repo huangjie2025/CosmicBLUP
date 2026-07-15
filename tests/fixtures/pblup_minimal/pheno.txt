@@ -1,0 +1,5 @@
+id trait group cov
+id1 10 A 1
+id2 12 B 2
+id3 13 A 3
+id4 14 B 4

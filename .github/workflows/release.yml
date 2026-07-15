@@ -1,0 +1,55 @@
+name: release-packages
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            script: bash scripts/package_linux.sh
+            artifact: dist/CosmicBLUP-*.tar.gz*
+          - os: macos-14
+            script: bash scripts/package_macos.sh
+            artifact: dist/CosmicBLUP-*.tar.gz*
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ninja-build libeigen3-dev zlib1g-dev libzstd-dev
+      - name: Install macOS dependencies
+        if: runner.os == 'macOS'
+        run: brew install ninja eigen zstd libomp
+      - name: Package
+        run: ${{ matrix.script }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CosmicBLUP-${{ runner.os }}
+          path: ${{ matrix.artifact }}
+
+  windows-package:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: choco install ninja --no-progress -y
+      - name: Bootstrap vcpkg
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg "$env:RUNNER_TEMP\vcpkg"
+          & "$env:RUNNER_TEMP\vcpkg\bootstrap-vcpkg.bat" -disableMetrics
+      - name: Package
+        shell: pwsh
+        run: ./scripts/package_windows.ps1 -VcpkgRoot "$env:RUNNER_TEMP\vcpkg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CosmicBLUP-Windows
+          path: dist/CosmicBLUP-*.zip*
