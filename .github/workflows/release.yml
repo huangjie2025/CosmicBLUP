@@ -21,7 +21,7 @@ jobs:
             artifact: dist/CosmicBLUP-*.tar.gz*
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y ninja-build libeigen3-dev zlib1g-dev libzstd-dev
@@ -38,7 +38,7 @@ jobs:
   windows-package:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install tools
         run: choco install ninja --no-progress -y
       - name: Bootstrap vcpkg

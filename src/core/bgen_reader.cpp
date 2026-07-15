@@ -7,7 +7,6 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
-#include <omp.h>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
