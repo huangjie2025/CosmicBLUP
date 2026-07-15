@@ -4,7 +4,6 @@
 #include <iostream>
 #include <cmath>
 #include <stdexcept>
-#include <omp.h>
 
 namespace cosmic {
 

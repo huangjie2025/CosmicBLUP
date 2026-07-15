@@ -3,7 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 #include <vector>
 #include <algorithm>
 #include <iomanip>
@@ -121,7 +123,9 @@ void GrmBuilder::compute(const PlinkReader& reader, const std::vector<int>& keep
 
     // Set threads
 #ifdef _OPENMP
+#ifdef _OPENMP
     omp_set_num_threads(options.thread_num);
+#endif
 #endif
 
     std::cout << "Calculating GRM for " << n << " individuals and " << m << " SNPs (Optimized Bit-Parallel)." << std::endl;
@@ -473,7 +477,9 @@ GrmBuilder::SplitGrmResult GrmBuilder::computeSplit(
     const auto& bim = reader.getBimInfo();
 
 #ifdef _OPENMP
+#ifdef _OPENMP
     omp_set_num_threads(options.thread_num);
+#endif
 #endif
 
     std::cout << "Calculating global + " << n_chrom << " chromosome GRMs in single pass ("
@@ -1932,7 +1938,9 @@ void GrmBuilder::computeSparse(const PlinkReader& reader) {
     size_t num_blocks = (m + options.block_size - 1) / options.block_size;
 
     #ifdef _OPENMP
+#ifdef _OPENMP
     omp_set_num_threads(options.thread_num);
+#endif
     #endif
 
     for (size_t b = 0; b < num_blocks; ++b) {
